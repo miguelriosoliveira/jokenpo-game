@@ -2,25 +2,45 @@
  * Created by miguel on 02/05/17.
  */
 
-const app = require("express")();
+const gameport = process.env.PORT || 8000;
+const io = require('socket.io');
+const express = require('express');
+const UUID = require('node-uuid');
+const verbose = false;
+const app = express.createServer();
 
-app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/index.html');
+/* Express server set up. */
+
+app.listen(gameport, function () {
+    console.log('\t :: Express :: Listening on port', gameport);
 });
 
-let server = app.listen(8000, function () {
-    let port = server.address().port;
-    console.log("Server running at port %s", port);
+app.get("/", function (req, res) {
+    res.sendFile(__dirname + "/index.html")
 });
 
-const io = require("socket.io")(server);
+app.get("/*", function (req, res, next) {
+    let file = req.params[0];
+    if (verbose) console.log('\t :: Express :: file requested:', file);
+    res.sendFile(`${__dirname}/${file}`)
+});
 
-io.on("connection", function (socket) {
-    console.log("a user connected");
-    socket.on("disconnect", function () {
-        console.log("user disconnected");
+/* Socket.IO server set up. */
+
+let sio = io.listen(app);
+
+sio.configure(function () {
+    sio.set("log level", 0);
+    sio.set("authorization", function (handshakeData, callback) {
+        callback(null, true);
     });
-    socket.on('chat message', function (msg) {
-        console.log('message: ' + msg);
+});
+
+sio.sockets.on("connection", function (client) {
+    client.userId = UUID();
+    client.emit("onconnected", {id: client.userId});
+    console.log('\t socket.io:: player', client.userid, 'connected');
+    client.on("disconnect", function () {
+        console.log('\t socket.io:: client disconnected', client.userId);
     });
 });

@@ -1,74 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <title>My Multiplayer Game</title>
-    <style>
-        * {
+    <style type="text/css">
+        html, body {
+            background: #212121;
+            color: #fff;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
-        body {
-            font: 13px Helvetica, Arial;
-        }
-
-        form {
-            background: #000;
-            padding: 3px;
-            position: fixed;
+        #canvas {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
             bottom: 0;
-            width: 100%;
-        }
-
-        form input {
-            border: 0;
-            padding: 10px;
-            width: 90%;
-            margin-right: .5%;
-        }
-
-        form button {
-            width: 9%;
-            background: rgb(130, 224, 255);
-            border: none;
-            padding: 10px;
-        }
-
-        #messages {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        #messages li {
-            padding: 5px 10px;
-        }
-
-        #messages li:nth-child(odd) {
-            background: #eee;
+            margin: auto;
         }
     </style>
+
+    <!-- Notice the URL, this is handled by socket.io on the server automatically, via express -->
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+
+    <!-- This will create a connection to socket.io, and print the user serverid that we sent from the server side. -->
+    <script type="text/javascript">
+        //This is all that needs
+        const socket = io.connect('/');
+        //Now we can listen for that event
+        socket.on('onconnected', function (data) {
+            //Note that the data is the object we sent from the server, as is. So we can assume its id exists.
+            console.log('Connected successfully to the socket.io server. My server side ID is', data.id);
+        });
+    </script>
+
 </head>
 <body>
-<ul id="messages"></ul>
-<form action="">
-    <input id="m" autocomplete="off"/>
-    <button>Send</button>
-</form>
 
-<script src="/socket.io/socket.io.js"></script>
-<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-<script>
-    $(function () {
-        var socket = io();
-        $('form').submit(function () {
-            socket.emit('chat message', $('#m').val());
-            $('#m').val('');
-            return false;
-        });
-    });
-</script>
+<canvas id="canvas"></canvas>
+
 </body>
 </html>

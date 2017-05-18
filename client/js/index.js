@@ -1,3 +1,5 @@
+/* globals io */
+
 let socket = io.connect("localhost:8000");
 
 socket.on("addTank", function (tank) {

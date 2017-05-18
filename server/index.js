@@ -2,21 +2,22 @@
  * Created by miguel on 02/05/17.
  */
 
-const gamePort = process.env.PORT || 8000;
 const express = require('express');
 const app = express();
+const chalk = require("chalk");
+const gamePort = process.env.PORT || 8000;
 const TANK_INIT_HP = 100;
 
 
 /* ============================== Express server set up ============================== */
 
 // Static resources server
-app.use(express.static("client"));
+app.use(express.static("_dist/"));
 
 // Make server listen to requisitions
 let server = app.listen(gamePort, function () {
     let port = server.address().port;
-    console.log("Server running at port %s", port);
+    console.log(chalk.green("Server running at port " + chalk.bold(port)));
 });
 
 /* ============================== Socket.IO server set up ============================== */
@@ -31,7 +32,7 @@ io.on("connection", function (client) {
     // cleinte pedindo pra entrar??
     // TODO: pra mim ainda é a mesma coisa que o evento "connection"
     client.on("joinGame", function (tank) {
-        console.log(tank.id + " joined the game");
+        console.log(tank.id + " joined the game", tank);
         let chance = new Chance();
         let initX = chance.natural({min: 40, max: 900});
         let initY = chance.natural({min: 40, max: 500});

@@ -1,4 +1,3 @@
-// const browserify = require("browserify");
 const gulp = require("gulp");
 const babel = require("gulp-babel");
 const browserSync = require("browser-sync").create();
@@ -11,7 +10,6 @@ gulp.task("js", function () {
         .pipe(babel({
             presets: ["es2015"]
         }))
-        // .pipe(browserify())
         .pipe(gulp.dest("_dist/js"));
 });
 
@@ -36,20 +34,19 @@ gulp.task("html-watch", ["html"], function (done) {
 /* LIBS */
 
 gulp.task("libs", function () {
-    return gulp.src("node_modules/socket.io/**")
-        .pipe(gulp.dest("_dist/libs/socket.io/"))
-        .pipe(gulp.dest("client/libs/socket.io/"));
+    return gulp.src([
+            "node_modules/jquery/dist/jquery.slim.js"
+        ])
+        .pipe(gulp.dest("_dist/libs/"))
+        .pipe(gulp.dest("client/libs/"));
 });
 
-/* SERVE */
+/* BROWSER SYNC */
 
-gulp.task("serve", ["libs", "html", "js"], function () {
+gulp.task("client", ["libs", "html", "js"], function () {
     // directory of static server
     browserSync.init({
-        server: {
-            baseDir: "_dist/"
-        },
-        port: 8000
+        proxy: "http://localhost:8000"
     });
     // reloads if any client file is modified
     gulp.watch("client/js/**/*.js", ["js-watch"]);

@@ -22,34 +22,30 @@ let server = app.listen(gamePort, function () {
 
 /* ============================== Socket.IO server set up ============================== */
 
-const io = require("socket.io")(server);
-const Chance = require("chance");
+const fs = require("fs");
+const socket = require("socket.io")(server);
+
+let GAME_EVENTS = {};
+let ROOMS = [];
+
+function getGameEvents() {
+    GAME_EVENTS = JSON.parse(fs.readFileSync(__dirname + "/game-events.json"));
+    return GAME_EVENTS;
+}
 
 // evento de conexão (quando alguem connecta no jogo)
-io.on("connection", function (client) {
+socket.on("connection", function (client) {
     console.log("User connected");
 
-    // cleinte pedindo pra entrar??
-    // TODO: pra mim ainda é a mesma coisa que o evento "connection"
-    client.on("joinGame", function (tank) {
-        console.log(tank.id + " joined the game", tank);
-        let chance = new Chance();
-        let initX = chance.natural({min: 40, max: 900});
-        let initY = chance.natural({min: 40, max: 500});
+    socket.emit("game-events", getGameEvents());
 
-        //cliente pedindo para o servidor adicionar tank
-        client.emit("addTank", {id: tank.id, type: tank.type, isLocal: true, x: initX, y: initY, hp: TANK_INIT_HP});
+    // cliente pedindo pra entrar
+    client.on(GAME_EVENTS.JOIN_GAME, function () {
+        console.log("User wants to play");
 
-        //cliente dizendo pra todos que está adicionando tank
-        client.broadcast.emit("addTank", {
-            id: tank.id,
-            type: tank.type,
-            isLocal: false,
-            x: initX,
-            y: initY,
-            hp: TANK_INIT_HP
-        });
+        // procurar por salas abertas
 
-        // game.addTank({id: tank.id, type: tank.type, hp: TANK_INIT_HP});
+        // se achar sala aberta, colocar usuário nela
+        // caso contrário, criar sala e colocá-lo lá
     })
 });

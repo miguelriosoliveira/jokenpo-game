@@ -1,14 +1,11 @@
 /* globals io */
 
 let socket = io.connect("localhost:8000");
+let GAME_EVENTS = {};
 
-socket.on("addTank", function (tank) {
-    console.log("pediu pro servidor adicionar um tank!");
-});
+socket.on("connect", () => console.log("Connected to server!"));
+socket.on("game-events", gameEvents => GAME_EVENTS = gameEvents);
 
 $(document).ready(function () {
-    $("#join").click(function () {
-        console.log("emitiu 'joinGame'");
-        socket.emit("joinGame", {id: "meu-tank", type: "panzer"});
-    });
+    $("#join").click(() => socket.emit(GAME_EVENTS.JOIN_GAME));
 });

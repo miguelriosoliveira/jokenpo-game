@@ -25,8 +25,11 @@ let server = app.listen(gamePort, function () {
 const fs = require("fs");
 const socket = require("socket.io")(server);
 
+const RoomManager = require("./RoomManager");
+const Player = require("./Player");
+
 let GAME_EVENTS = {};
-let ROOMS = [];
+let roomManager = new RoomManager();
 
 function getGameEvents() {
     GAME_EVENTS = JSON.parse(fs.readFileSync(__dirname + "/game-events.json"));
@@ -40,12 +43,16 @@ socket.on("connection", function (client) {
     socket.emit("game-events", getGameEvents());
 
     // cliente pedindo pra entrar
-    client.on(GAME_EVENTS.JOIN_GAME, function () {
-        console.log("User wants to play");
+    client.on(GAME_EVENTS.JOIN_GAME, function (playerData) {
+        console.log("User wants to play", playerData);
+
+        // Criar objeto player com os dados enviados pelo cliente
+        let player = new Player(playerData);
 
         // procurar por salas abertas
-
         // se achar sala aberta, colocar usuário nela
         // caso contrário, criar sala e colocá-lo lá
+        roomManager.putPlayerOnFirstFreeSpace(player);
+        console.log(roomManager.rooms);
     })
 });

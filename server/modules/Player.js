@@ -4,9 +4,11 @@
 
 const uuid = require("uuid");
 
-module.exports = class Player {
+class Player {
     constructor({name = ""}) {
         this.id = uuid();
         this.name = name;
     }
-};
+}
+
+module.exports = Player;

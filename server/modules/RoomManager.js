@@ -1,6 +1,6 @@
 const Room = require("./Room");
 
-module.exports = class RoomManager {
+class RoomManager {
     constructor() {
         this.rooms = [];
     }
@@ -13,10 +13,12 @@ module.exports = class RoomManager {
         for (let room of this.rooms) {
             if (room.isOpen()) {
                 room.addPlayer(player);
-                return;
+                return room;
             }
         }
         this.createRoom();
-        this.putPlayerOnFirstFreeSpace(player);
+        return this.putPlayerOnFirstFreeSpace(player);
     }
-};
+}
+
+module.exports = RoomManager;

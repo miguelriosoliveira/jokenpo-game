@@ -1,4 +1,4 @@
-module.exports = class Room {
+class Room {
     constructor() {
         this.player1 = null;
         this.player2 = null;
@@ -17,6 +17,8 @@ module.exports = class Room {
     }
 
     isFull() {
-        return this.player1 || this.player2;
+        return this.player1 && this.player2;
     }
-};
+}
+
+module.exports = Room;

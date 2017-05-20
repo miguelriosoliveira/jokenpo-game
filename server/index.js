@@ -6,8 +6,6 @@ const express = require('express');
 const app = express();
 const chalk = require("chalk");
 const gamePort = process.env.PORT || 8000;
-const TANK_INIT_HP = 100;
-
 
 /* ============================== Express server set up ============================== */
 
@@ -22,11 +20,11 @@ let server = app.listen(gamePort, function () {
 
 /* ============================== Socket.IO server set up ============================== */
 
-const fs = require("fs");
 const socket = require("socket.io")(server);
+const fs = require("fs");
 
-const RoomManager = require("./RoomManager");
-const Player = require("./Player");
+const RoomManager = require("./modules/RoomManager");
+const Player = require("./modules/Player");
 
 let GAME_EVENTS = {};
 let roomManager = new RoomManager();
@@ -39,20 +37,16 @@ function getGameEvents() {
 // evento de conexão (quando alguem connecta no jogo)
 socket.on("connection", function (client) {
     console.log("User connected");
-
     socket.emit("game-events", getGameEvents());
 
     // cliente pedindo pra entrar
     client.on(GAME_EVENTS.JOIN_GAME, function (playerData) {
         console.log("User wants to play", playerData);
-
-        // Criar objeto player com os dados enviados pelo cliente
-        let player = new Player(playerData);
-
-        // procurar por salas abertas
-        // se achar sala aberta, colocar usuário nela
-        // caso contrário, criar sala e colocá-lo lá
-        roomManager.putPlayerOnFirstFreeSpace(player);
+        let playerRoom = roomManager.putPlayerOnFirstFreeSpace(new Player(playerData));
         console.log(roomManager.rooms);
-    })
+        socket.send(playerData.name + " joined room!");
+        if (playerRoom.isFull()) {
+            socket.emit(GAME_EVENTS.START_GAME);
+        }
+    });
 });

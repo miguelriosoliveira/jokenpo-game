@@ -1,5 +1,6 @@
 {
     "JOIN_GAME": "join-game",
+    "START_GAME": "start-game",
     "SEND_ROCK": "send-rock",
     "SEND_PAPER": "send-paper",
     "SEND_SCISSOR": "send-scissor"

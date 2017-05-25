@@ -41,7 +41,7 @@ gulp.task("libs", function () {
         .pipe(gulp.dest("client/libs/"));
 });
 
-/* BROWSER SYNC */
+/* CLIENT (BROWSER-SYNC) */
 
 gulp.task("client", ["libs", "html", "js"], function () {
     // directory of static server
@@ -52,3 +52,7 @@ gulp.task("client", ["libs", "html", "js"], function () {
     gulp.watch("client/js/**/*.js", ["js-watch"]);
     gulp.watch("client/*.html", ["html-watch"]);
 });
+
+/* SERVER (NO BROWSER-SYNC) */
+
+gulp.task("server", ["libs", "html", "js"]);

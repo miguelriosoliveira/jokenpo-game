@@ -4,8 +4,9 @@
     "description": "A few tests about server-side JavaScript in a multiplayer game from scratch",
     "main": "index.js",
     "scripts": {
-        "client": "sh scripts/client.sh",
-        "server": "sh scripts/server.sh"
+        "start": "sh scripts/server.sh",
+        "server": "sh scripts/server.sh",
+        "client": "sh scripts/client.sh"
     },
     "repository": {
         "type": "git",

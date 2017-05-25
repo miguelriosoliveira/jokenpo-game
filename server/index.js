@@ -5,17 +5,16 @@
 const express = require('express');
 const app = express();
 const chalk = require("chalk");
-const gamePort = process.env.PORT || 8000;
 
 /* ============================== Express server set up ============================== */
 
 // Static resources server
+app.set("port", process.env.PORT || 8000);
 app.use(express.static("_dist/"));
 
 // Make server listen to requisitions
-let server = app.listen(gamePort, function () {
-    let port = server.address().port;
-    console.log(chalk.green("Server running at port " + chalk.bold(port)));
+let server = app.listen(app.get("port"), function () {
+    console.log(chalk.green("Server running at port " + chalk.bold(app.get("port"))));
 });
 
 /* ============================== Socket.IO server set up ============================== */

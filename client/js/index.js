@@ -1,6 +1,10 @@
 /* globals io */
 
-let socket = io.connect("localhost:8000");
+/* my port: 8000
+ * heroku port: 5000 */
+// TODO find a way to get the right address and port programmatically
+// let socket = io.connect("localhost:8000");
+let socket = io.connect("localhost:5000");
 let GAME_EVENTS = {};
 
 socket.on("connect", () => console.log("Connected to server!"));

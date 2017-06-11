@@ -3,8 +3,8 @@
 /* my port: 8000
  * heroku port: 5000 */
 // TODO find a way to get the right address and port programmatically
-// let socket = io.connect("localhost:8000");
-let socket = io.connect("localhost:5000");
+let socket = io.connect("localhost:8000");
+// let socket = io.connect("localhost:5000");
 let GAME_EVENTS = {};
 
 socket.on("connect", () => console.log("Connected to server!"));
@@ -15,8 +15,5 @@ socket.on("game-events", gameEvents => {
 socket.on("message", message => console.log(message));
 
 $(document).ready(function () {
-    $("#user-name").submit(event => {
-        event.preventDefault();
-        socket.emit(GAME_EVENTS.JOIN_GAME, {name: $("#username").val()});
-    });
+    $("#canvas")
 });

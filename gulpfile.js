@@ -31,6 +31,18 @@ gulp.task("html-watch", ["html"], function (done) {
     done();
 });
 
+/* CSS */
+
+gulp.task("css", function () {
+    return gulp.src("client/css/**/*.css")
+        .pipe(gulp.dest("_dist/css"));
+});
+
+gulp.task("css-watch", ["css"], function (done) {
+    browserSync.reload();
+    done();
+});
+
 /* LIBS */
 
 gulp.task("libs", function () {
@@ -50,6 +62,7 @@ gulp.task("client", ["libs", "html", "js"], function () {
     });
     // reloads if any client file is modified
     gulp.watch("client/js/**/*.js", ["js-watch"]);
+    gulp.watch("client/css/**/*.css", ["css-watch"]);
     gulp.watch("client/*.html", ["html-watch"]);
 });
 
